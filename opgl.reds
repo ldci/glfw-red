@@ -6,7 +6,15 @@ Red/System [
 ]
 
 
-#define gllib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"
+; please update paths accoeding to your OS
+#switch OS [
+        MacOSX		[#define gllib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"]  
+        Windows		[#define gllib "c:\.."]                               
+        Linux           [#define gllib "/usr/lib/libGL.so"]                                        
+	#default	[#define gllib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"]
+]
+
+;But you can also use Kaj de Vos's wrapping for opengl (http://red.esperconsultancy.nl/Red-OpenGL/timeline)
 
 ; for red pointers
 
