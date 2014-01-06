@@ -2,7 +2,7 @@ Red/System [
 	Title:		"GLFW Binding: Splitview"
 	Author:		"François Jouen"
 	Rights:		"Copyright (c) 2013 François Jouen. All rights reserved."
-	License:        "BSD-3 - https://github.com/dockimbel/Red/blob/master/BSD-3-License.txt"
+	License:    "BSD-3 - https://github.com/dockimbel/Red/blob/master/BSD-3-License.txt"
 ]
 
     
