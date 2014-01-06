@@ -15,6 +15,7 @@ Red/System [
 
 #include %../glfw.reds
 #include %../Tools/user.reds
+#include %../Tools/C-library.reds
 
 ;in gl3.h
 #define GL_CONTEXT_CORE_PROFILE_BIT             00000001h
@@ -43,8 +44,9 @@ Red/System [
 #define STRATEGY_NAME_LOSE "lose"
 
 error_callback: func [[cdecl] error [integer!] description [c-string!]] [
+        ;write-form [stderr "Error: %s\n" description]
         print ["Error: " error " " description newline]
-        throw error ; stderr
+        throw error
 ]
 
 get_client_api_name: func [api [integer!] return: [c-string!]] [

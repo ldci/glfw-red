@@ -16,6 +16,7 @@ Red/System [
     
     #include %../glfw.reds
     #include %../Tools/user.reds
+    #include %../Tools/C-library.reds
     
     cursor_x:  0.0
     cursor_y:  0.0
@@ -31,27 +32,18 @@ Red/System [
     h: 0.0
     l: 0
     
-    sw: #"1"
-    foo: 1
-    set_swap_interval: func [window [GLFWwindow] interval [integer!]][
+    set_swap_interval: func [window [GLFWwindow] interval [integer!] /local title][
+        title: as c-string! allocate 256
         swap_interval: interval
         glfwSwapInterval swap_interval
-        title: "Cursor Inaccuracy Detector: "
-        l: length? title
-        ;sw: as byte! swap_interval
-        
-        title/l: sw
+        format-any [title "Cursor Inaccuracy Detector (interval %i)" swap_interval]
         glfwSetWindowTitle window title
     ]
     
     
     
-    
-    
-    
-    
     error_callback: func [[cdecl] error [integer!] description [c-string!]] [
-        print [ description " " stderr]
+        print-error description
     ]
     
     framebuffer_size_callback: func [
@@ -62,8 +54,8 @@ Red/System [
         glViewport 0 0 window_width window_height
         glMatrixMode GL_PROJECTION
         glLoadIdentity
-        glOrtho 0.0 int-to-float window_width 0.0 int-to-float window_height  0.0 1.0
-        ;gluOrtho2D 0.0  window_width 0.0   window_height ; for clipping
+        ;glOrtho 0.0 int-to-float window_width 0.0 int-to-float window_height  0.0 1.0
+        gluOrtho2D 0.0 int-to-float window_width 0.0  int-to-float window_height ; for clipping
     ]
     
     cursor_position_callback: func [
