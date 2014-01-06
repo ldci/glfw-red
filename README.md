@@ -1,5 +1,5 @@
 # GLFW Binding for Red Language 
-## http://www.red-lang.org/
+## http://www.red-lang.org/ http://www.glfw.org/
 
 This binding has been extensively tested with Mac OSX 10.9.1 and works fine under OSX. 
 Please adapt path to libraries according your main OS.
