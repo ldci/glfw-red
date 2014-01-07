@@ -6,12 +6,14 @@ Red/System [
 ]
 
 
-; please update paths accoeding to your OS
+; please update paths according to your OS
 #switch OS [
-        MacOSX		[#define glulib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib"]  
-        Windows		[#define glulib "glu32.dll"]                               
-        Linux           [#define glulib "/usr/lib/libGLU.so.1"]                                        
-	#default	[#define glulib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib"]
+        MacOSX		[#define glulib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib"
+                        #define calling cdecl]  
+        Windows		[#define glulib "glu32.dll" #define calling stdcall]                               
+        Linux           [#define glulib "/usr/lib/libGLU.so.1" #define calling cdecl]                                        
+	#default	[#define glulib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib"
+                        #define calling cdecl]
 ]
 
 ;But you can also use Kaj de Vos's wrapping for opengl (http://red.esperconsultancy.nl/Red-OpenGL/timeline)
@@ -220,7 +222,7 @@ Red/System [
 ;***********************************************************
 
 #import [
-    glulib cdecl [
+    glulib calling [
         gluBeginCurve: "gluBeginCurve" [
             nurb	[int-ptr!] ;GLUnurbs*
         ]

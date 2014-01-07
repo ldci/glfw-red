@@ -8,10 +8,12 @@ Red/System [
 
 ; please update paths accoeding to your OS
 #switch OS [
-        MacOSX		[#define gllib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"]  
-        Windows		[#define gllib "c:\.."]                               
-        Linux           [#define gllib "/usr/lib/libGL.so"]                                        
-	#default	[#define gllib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"]
+        MacOSX		[#define gllib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"
+                        #define calling cdecl]  
+        Windows		[#define gllib "c:\.." #define calling stdcall]                               
+        Linux           [#define gllib "/usr/lib/libGL.so" #define calling cdecl]                                        
+	#default	[#define gllib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"
+                        #define calling cdecl]
 ]
 
 ;But you can also use Kaj de Vos's wrapping for opengl (http://red.esperconsultancy.nl/Red-OpenGL/timeline)
@@ -25,7 +27,7 @@ Red/System [
 
 
 #define GLenum			integer!
-#define GLboolean 		byte!
+#define GLboolean 		logic!
 #define GLbitfield		integer!
 #define GLbyte                  byte!
 #define GLshort                 integer!
@@ -1728,7 +1730,7 @@ Red/System [
 ;#else /* GL_GLEXT_FUNCTION_POINTERS */
 
 #import [
-    gllib cdecl [
+    gllib calling [
         glAccum: "glAccum" [
             op          [GLenum]
             value       [float!]
@@ -3584,19 +3586,19 @@ Red/System [
 	border	[GLint]
 	format	[GLenum]
 	type	[GLenum]
-	*pixels	[GLvoid]
+	*pixels	[byte-ptr!]
     ]
 
     glTexImage2D: "glTexImage2D" [
-	target	[GLenum]
-	level	[GLint]
+	target	        [GLenum]
+	level	        [GLint]
 	internalformat	[GLint]
-	width	[GLsizei]
-	height	[GLsizei]
-	border	[GLint]
-	format	[GLenum]
-	type	[GLenum]
-	*pixels	[GLvoid]
+	width	        [GLsizei]
+	height	        [GLsizei]
+	border	        [GLint]
+	format	        [GLenum]
+	type	        [GLenum]
+	*pixels	        [byte-ptr!]
     ]
 
     glTexImage3D: "glTexImage3D" [
@@ -3609,7 +3611,7 @@ Red/System [
 	border	[GLint]
 	format	[GLenum]
 	type	[GLenum]
-	*pixels	[GLvoid]
+	*pixels	[byte-ptr!]
     ]
 
     glTexParameterf: "glTexParameterf" [
