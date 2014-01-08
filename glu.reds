@@ -1,7 +1,7 @@
 Red/System [
 	Title:		"OpenGL Binding"
 	Author:		"François Jouen"
-	Rights:		"Copyright (c) 2013 François Jouen. All rights reserved."
+	Rights:		"Copyright (c) 2013 F.Jouen. All rights reserved."
 	License:        "BSD-3 - https://github.com/dockimbel/Red/blob/master/BSD-3-License.txt"
 ]
 
@@ -16,7 +16,6 @@ Red/System [
                         #define calling cdecl]
 ]
 
-;But you can also use Kaj de Vos's wrapping for opengl (http://red.esperconsultancy.nl/Red-OpenGL/timeline)
 
 ;***********************************************************
 

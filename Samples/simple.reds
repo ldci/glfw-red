@@ -19,12 +19,12 @@ Red/System [
     &width: :width; pointer! 
     &height: :height ;pointer!
     
-    error_callback: func [[cdecl] error [integer!] description [c-string!]] [
+    error_callback: func [[calling] error [integer!] description [c-string!]] [
         print [ description " " stderr]
     ]
     
     key_callback: func [
-        [cdecl]
+        [calling]
         window [GLFWwindow]
         key [integer!]
         scancode [integer!]

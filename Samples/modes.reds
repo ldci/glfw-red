@@ -59,6 +59,9 @@ listModes: function [monitor [GLFWmonitor]
 ]
 
 
+; main program
+
+
 print newline
 
 Print ["Red is talking to GLFW and OpenGL" newline]
@@ -69,19 +72,21 @@ print newline
 print ["Time elapsed since GLFW Library initialization : " glfwGetTime newline]
 print ["Version: " glfwGetVersionString newline]
 nbMon: declare pointer! [integer!]  
-cmonitors: glfwGetMonitors nbMon                   ; get the number of connected monitors (here 2) and  the array return by glfwGetMonitors
+cmonitors: glfwGetMonitors nbMon
+; get the number of connected monitors (here 2) and  the array return by glfwGetMonitors
 
 print ["Number of connected monitors: " nbMon/value newline]
 
+print [cmonitors " " cmonitors + 4 newline]
 
 
 
-; main program
 print newline
 i: 1
 m: declare pointer![integer!]
 until [
     m: as [pointer![integer!]] cmonitors/i
+    
     listModes  m
     i: i + 1
 i > nbMon/value     

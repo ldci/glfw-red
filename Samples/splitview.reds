@@ -412,7 +412,7 @@ Red/System [
    
 
     framebufferSizeFun: func [
-        [cdecl]
+        [calling]
         window [GLFWwindow] w [integer!] h [integer!]][
             width: w
             either h > 0 [height: h][height: 1]
@@ -421,14 +421,14 @@ Red/System [
     
     ;Window refresh callback function
     windowRefreshFun: func [
-        [cdecl]
+        [calling]
         window [GLFWwindow]] [
         do_redraw: 1    
     ]
     
     ;Mouse position callback function
     cursorPosFun:  func [
-        [cdecl]
+        [calling]
         window [GLFWwindow] x [float!] y [float!]] [
         ;Depending on which view was selected, rotate around different axes
         xp: float-to-int (x - xpos)
@@ -446,7 +446,7 @@ Red/System [
     ]
     ;Mouse button callback function
     mouseButtonFun: func [
-        [cdecl]
+        [calling]
         window [GLFWwindow] button [integer!] action [integer!] mods [integer!] /local x y] [
         either button = (GLFW_MOUSE_BUTTON_LEFT) AND (action = GLFW_PRESS) [
             active_view: 1
@@ -463,7 +463,7 @@ Red/System [
     ; key callback function
     
     key_callback: func [
-        [cdecl]
+        [calling]
         window [GLFWwindow]
         key [integer!]
         scancode [integer!]

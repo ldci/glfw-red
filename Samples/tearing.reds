@@ -9,7 +9,7 @@ Red/System [
 ;
 ; This test renders a high contrast, horizontally moving bar, allowing for
 ; visual verification of whether the set swap interval is indeed obeyed
-; Orginal program by amilla Berglund <elmindreda@elmindreda.org>
+; Orginal program by Camilla Berglund <elmindreda@elmindreda.org>
 ;========================================================================
 
 #include %../glfw.reds

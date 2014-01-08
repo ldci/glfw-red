@@ -133,7 +133,7 @@ glfw_attribs/glw5/name: "OpenGL profile"
 glfw_attribs/glw6/attrib: 0
 glfw_attribs/glw6/name: ""  
 
-error_callback: func [[cdecl] error [integer!] description [c-string!]] [
+error_callback: func [[calling] error [integer!] description [c-string!]] [
         print [ description " " stderr]
 ]
 

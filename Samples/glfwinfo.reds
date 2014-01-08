@@ -43,7 +43,7 @@ Red/System [
 #define STRATEGY_NAME_NONE "none"
 #define STRATEGY_NAME_LOSE "lose"
 
-error_callback: func [[cdecl] error [integer!] description [c-string!]] [
+error_callback: func [[calling] error [integer!] description [c-string!]] [
         ;write-form [stderr "Error: %s\n" description]
         print ["Error: " error " " description newline]
         throw error

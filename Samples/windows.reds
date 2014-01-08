@@ -2,7 +2,7 @@ Red/System [
 	Title:		"GLFW Binding: Simple multi-window test"
 	Author:		"François Jouen"
 	Rights:		"Copyright (c) 2013 François Jouen. All rights reserved."
-	License:    "BSD-3 - https://github.com/dockimbel/Red/blob/master/BSD-3-License.txt"
+	License:        "BSD-3 - https://github.com/dockimbel/Red/blob/master/BSD-3-License.txt"
 ]
 
     ;========================================================================    
@@ -56,7 +56,7 @@ Red/System [
    
     
     
-    error_callback: func [[cdecl] error [integer!] description [c-string!]] [
+    error_callback: func [[calling] error [integer!] description [c-string!]] [
         print ["Error: " error " " description newline]
         throw error ; stderr
     ]

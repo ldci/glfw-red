@@ -205,32 +205,32 @@ get_character_string: func [character [integer!] return: [c-string!]][
 
 ;//// Fin
 
-error_callback: func [[cdecl] error [integer!] description [c-string!]] [
+error_callback: func [[calling] error [integer!] description [c-string!]] [
         print [ description " " stderr]
 ]
 
 
-window_pos_callback: func [[cdecl] window [GLFWwindow] x [integer!] y [integer!]] [
+window_pos_callback: func [[calling] window [GLFWwindow] x [integer!] y [integer!]] [
     counter: counter + 1
     print [ counter " at " glfwGetTime " : Window position: " x " " y newline]
 ]
 
-window_size_callback: func [[cdecl] window [GLFWwindow] width [integer!] height [integer!]] [
+window_size_callback: func [[calling] window [GLFWwindow] width [integer!] height [integer!]] [
     counter: counter + 1
     print [ counter " at " glfwGetTime " : Window size: " width " " height  newline]
 ]
 
-framebuffer_size_callback: func [[cdecl] window [GLFWwindow] width [integer!] height [integer!]] [
+framebuffer_size_callback: func [[calling] window [GLFWwindow] width [integer!] height [integer!]] [
     counter: counter + 1
     print [ counter " at " glfwGetTime " : Framebuffer size: " width " " height  newline]
 ]
 
-window_close_callback: func [[cdecl] window [GLFWwindow]] [
+window_close_callback: func [[calling] window [GLFWwindow]] [
     counter: counter + 1
     print [ counter " at " glfwGetTime " : Window close"  newline]
 ]
 
-window_refresh_callback: func [[cdecl] window [GLFWwindow]] [
+window_refresh_callback: func [[calling] window [GLFWwindow]] [
     counter: counter + 1
     print [ counter " at " glfwGetTime " : Window refresh"  newline]
     if glfwGetCurrentContext <> NULL
@@ -241,7 +241,7 @@ window_refresh_callback: func [[cdecl] window [GLFWwindow]] [
 ]
 
 
-window_focus_callback: func [[cdecl] window [GLFWwindow] focused [integer!] /local str] [
+window_focus_callback: func [[calling] window [GLFWwindow] focused [integer!] /local str] [
     counter: counter + 1
     either focused = 1 [str: "focused" ] [str: "defocused"]
     print [ counter " at " glfwGetTime " : Window was " str newline]
@@ -250,7 +250,7 @@ window_focus_callback: func [[cdecl] window [GLFWwindow] focused [integer!] /loc
 
 
 
-window_iconify_callback: func [[cdecl] window [GLFWwindow] iconified [integer!] /local str] [
+window_iconify_callback: func [[calling] window [GLFWwindow] iconified [integer!] /local str] [
     counter: counter + 1
     either iconified = 1 [str: "iconified" ] [str: "restored"]
     print [ counter " at " glfwGetTime " : Window was " str newline]
@@ -259,7 +259,7 @@ window_iconify_callback: func [[cdecl] window [GLFWwindow] iconified [integer!] 
 
 
 
-mouse_button_callback: func [[cdecl] window [GLFWwindow] button [integer!] action [integer!] mods [integer!]/local name] [
+mouse_button_callback: func [[calling] window [GLFWwindow] button [integer!] action [integer!] mods [integer!]/local name] [
     counter: counter + 1
     name: get_button_name button
     print [ counter " at " glfwGetTime " : Mousse button " button " " ]
@@ -268,25 +268,25 @@ mouse_button_callback: func [[cdecl] window [GLFWwindow] button [integer!] actio
     print [ " was " get_action_name action newline]
 ]
 
-cursor_position_callback: func [[cdecl] window [GLFWwindow] x [float!] y [float!]] [
+cursor_position_callback: func [[calling] window [GLFWwindow] x [float!] y [float!]] [
     counter: counter + 1
     print [ counter " at " glfwGetTime " : Cursor position: " x " "  y newline]
 ]
 
-cursor_enter_callback: func [[cdecl] window [GLFWwindow] entered [integer!] /local str] [
+cursor_enter_callback: func [[calling] window [GLFWwindow] entered [integer!] /local str] [
     counter: counter + 1
     either entered = 1 [str: "entered" ] [str: "left"]
     print [ counter " at " glfwGetTime " : Cursor " str  " window" newline]
 ]
 
-scroll_callback: func [[cdecl] window [GLFWwindow] x [float!] y [float!]] [
+scroll_callback: func [[calling] window [GLFWwindow] x [float!] y [float!]] [
     counter: counter + 1
     print [ counter " at " glfwGetTime " : Scroll: " x " "  y newline]
 ]
 
 
 key_callback: func [
-        [cdecl]
+        [calling]
         window [GLFWwindow]
         key [integer!]
         scancode [integer!]
@@ -310,14 +310,14 @@ key_callback: func [
 ]
 
 
-char_callback: func [[cdecl] window [GLFWwindow] character [integer!] /local str] [
+char_callback: func [[calling] window [GLFWwindow] character [integer!] /local str] [
     counter: counter + 1
     str: get_character_string character
     print [ counter " at " glfwGetTime " : Character: " character " "  str " input"  newline]
 ]
 
 
-monitor_callback: func [[cdecl] monitor [GLFWmonitor] event [integer!] /local mode widthMM heightMM &w &h x y &x &y] [
+monitor_callback: func [[calling] monitor [GLFWmonitor] event [integer!] /local mode widthMM heightMM &w &h x y &x &y] [
     widthMM: 0
     heightMM: 0
     &w: :widthMM; pointer! 

@@ -10,18 +10,14 @@ Red/System [
 #switch OS [
         MacOSX		[#define gllib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"
                         #define calling cdecl]  
-        Windows		[#define gllib "c:\.." #define calling stdcall]                               
-        Linux           [#define gllib "/usr/lib/libGL.so" #define calling cdecl]                                        
+        Windows		[#define gllib "opengl32.dll" #define calling stdcall]                               
+        Linux           [#define gllib "/usr/lib/libGL.so.1" #define calling cdecl]                                        
 	#default	[#define gllib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"
                         #define calling cdecl]
 ]
 
-;But you can also use Kaj de Vos's wrapping for opengl (http://red.esperconsultancy.nl/Red-OpenGL/timeline)
-
-; for red pointers
-
-#define float32-ptr!        [pointer! [float32!]]
-#define float-ptr!          [pointer! [float!]]
+; we need some pointers
+#include %rpointers.reds
 
 ; gltypes.h
 

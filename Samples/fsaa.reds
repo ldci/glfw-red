@@ -18,16 +18,16 @@ Red/System [
 
 time: 0.0
 
-error_callback: func [[cdecl] error [integer!] description [c-string!]] [
+error_callback: func [[calling] error [integer!] description [c-string!]] [
         print [ description " " stderr]
 ]
 
-framebuffer_size_callback: func [[cdecl] window [GLFWwindow] width [integer!] height [integer!]] [
+framebuffer_size_callback: func [[calling] window [GLFWwindow] width [integer!] height [integer!]] [
      glViewport 0 0 width height
 ]
 
 key_callback: func [
-        [cdecl]
+        [calling]
         window [GLFWwindow]
         key [integer!]
         scancode [integer!]

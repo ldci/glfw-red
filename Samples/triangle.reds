@@ -8,7 +8,7 @@ Red/System [
     ; just as simple demo to draw triangle
     #include %../glfw.reds
     
-    error_callback: func [[cdecl] error [integer!] description [c-string!]] [
+    error_callback: func [[calling] error [integer!] description [c-string!]] [
     print [ description " " stderr]
     ]
     

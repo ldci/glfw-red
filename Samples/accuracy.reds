@@ -42,12 +42,12 @@ Red/System [
     
     
     
-    error_callback: func [[cdecl] error [integer!] description [c-string!]] [
+    error_callback: func [[calling] error [integer!] description [c-string!]] [
         print-error description
     ]
     
     framebuffer_size_callback: func [
-        [cdecl]
+        [calling]
         window [GLFWwindow] width [integer!] height [integer!]][
         window_width: width
         window_height: height
@@ -59,14 +59,14 @@ Red/System [
     ]
     
     cursor_position_callback: func [
-        [cdecl]
+        [calling]
         window [GLFWwindow] x [float!] y [float!]][
             cursor_x: x
             cursor_y: y
     ]
     
     key_callback: func [
-        [cdecl]
+        [calling]
         window [GLFWwindow]
         key [integer!]
         scancode [integer!]

@@ -37,13 +37,13 @@ Red/System [
     
     window: declare pointer! [integer!]     ; a pointer to an element of the array
     
-    error_callback: func [[cdecl] error [integer!] description [c-string!]] [
+    error_callback: func [[calling] error [integer!] description [c-string!]] [
         print ["Error: " error " " description newline]
         throw error
     ]
     
     key_callback: func [
-        [cdecl]
+        [calling]
         window [GLFWwindow]
         key [integer!]
         scancode [integer!]
@@ -70,10 +70,10 @@ Red/System [
     
     create_texture: func [return: [integer!] /local size pixels ct x y texture ][
         ;char pixels[256 * 256]
-        pixels: as byte-ptr! allocate (256 * 256)
-        &texture: declare pointer! [integer!]
+        pixels: allocate (256 * 256)
+        texture: 0
+        &texture: :texture
         glGenTextures 1 &texture
-        texture: &texture/value
         glBindTexture GL_TEXTURE_2D texture
         
         y: 0 
