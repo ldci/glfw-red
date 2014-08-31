@@ -1,7 +1,7 @@
 Red/System [
 	Title:		"GLFW Binding: Title"
-	Author:		"François Jouen"
-	Rights:		"Copyright (c) 2013 François Jouen. All rights reserved."
+	Author:		"F. Jouen"
+	Rights:		"Copyright (c) 2013 F. Jouen. All rights reserved."
 	License:        "BSD-3 - https://github.com/dockimbel/Red/blob/master/BSD-3-License.txt"
 ]
 
@@ -10,7 +10,7 @@ Red/System [
 
     glfwInit
     ;Create a windowed mode window and its OpenGL context
-    window: glfwCreateWindow 640 480 "English 日本語 русский язык 官話" NULL NULL
+    window: glfwCreateWindow 640 480 "Français English 日本語 русский язык 官話" NULL NULL
     
     ;Make the window's context current
     glfwMakeContextCurrent window
@@ -22,8 +22,7 @@ Red/System [
         ;Swap front and back buffers ;
         glfwSwapBuffers window
         ;Poll for and process events 
-        glfwPollEvents
-        
+        glfwPollEvents  
     ]
     
     glfwTerminate

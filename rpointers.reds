@@ -1,6 +1,6 @@
 Red/System [
 	Title:		"GLFW Binding"
-	Author:		"Francois Jouen"
+	Author:		"F. Jouen"
 	Rights:		"Copyright (c) 2013 F. Jouen. All rights reserved."
 	License:    "BSD-3 - https://github.com/dockimbel/Red/blob/master/BSD-3-License.txt"
 ]

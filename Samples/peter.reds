@@ -1,7 +1,7 @@
 Red/System [
 	Title:		"GLFW Binding: peter"
-	Author:		"François Jouen"
-	Rights:		"Copyright (c) 2013 François Jouen. All rights reserved."
+	Author:		"F. Jouen"
+	Rights:		"Copyright (c) 2013-2014 F. Jouen. All rights reserved."
 	License:        "BSD-3 - https://github.com/dockimbel/Red/blob/master/BSD-3-License.txt"
 ]
 
