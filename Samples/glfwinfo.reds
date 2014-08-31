@@ -1,7 +1,7 @@
 Red/System [
 	Title:		"GLFW Binding: glwinfo"
-	Author:		"F. Jouen"
-	Rights:		"Copyright (c) 2013-2014 F. Jouen. All rights reserved."
+	Author:		"François Jouen"
+	Rights:		"Copyright (c) 2013-2014 François Jouen. All rights reserved."
 	License:        "BSD-3 - https://github.com/dockimbel/Red/blob/master/BSD-3-License.txt"
 ]
 
@@ -97,7 +97,7 @@ list_extensions: func [api [integer!] major [integer!] minor [integer!] /local i
         print [newline]
     ]
     [
-        extensions: glGetString GL_EXTENSIONS ; contr�ler glGetString dans opengl!
+        extensions: glGetString GL_EXTENSIONS ; contrôler glGetString dans opengl!
         length: length? as c-string! extensions
         ; parse string is necessary
         i: 1
