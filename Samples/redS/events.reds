@@ -18,8 +18,8 @@ Red/System [
 ; original program Copyright (c) Camilla Berglund <elmindreda@elmindreda.org>
 ;========================================================================
 
-#include %../glfw.reds
-#include %../Tools/user.reds
+#include %../../glfw.reds
+
 
 ;These must match the input mode defaults
 closeable: GL_TRUE

@@ -6,7 +6,7 @@ Red/System [
 ]
 
     ; just as simple demo to draw triangle
-    #include %../glfw.reds
+    #include %../../glfw.reds
     
     error_callback: func [[calling] error [integer!] description [c-string!]] [
     print [ description " " stderr]
@@ -14,7 +14,7 @@ Red/System [
     
     initgl: func [return: [integer!]] [
 	if glfwInit = 0 [glfwTerminate]
-	window: glfwCreateWindow 800 600 "A Simple OpenGL Triangle with Red" NULL NULL
+	window: glfwCreateWindow 800 600 "A Simple OpenGL Triangle with Red/System" NULL NULL
 	glfwMakeContextCurrent window
 	glfwSetErrorCallback :error_callback
 	return 1

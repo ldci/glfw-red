@@ -14,8 +14,8 @@ Red/System [
 ;========================================================================
 
 
-#include %../glfw.reds
-#include %../Tools/user.reds
+#include %../../glfw.reds
+
 
 
 STEP_SIZE: 0.1

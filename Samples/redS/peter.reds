@@ -14,7 +14,7 @@ Red/System [
 ; original program Copyright (c) Camilla Berglund <elmindreda@elmindreda.org>
 ;========================================================================
 
-#include %../glfw.reds
+#include %../../glfw.reds
 
 rreopen: GL_FALSE
 cursor_x: 0.0

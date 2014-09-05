@@ -6,7 +6,7 @@ Red/System [
 ]
 
 
-#include %../glfw.reds
+#include %../../glfw.reds
 
     glfwInit
     ;Create a windowed mode window and its OpenGL context

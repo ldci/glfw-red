@@ -12,8 +12,8 @@ Red/System [
 ;========================================================================
 
 
-#include %../glfw.reds
-#include %../Tools/user.reds
+#include %../../glfw.reds
+
 
 
 listModes: function [monitor [GLFWmonitor]

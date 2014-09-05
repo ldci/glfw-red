@@ -13,8 +13,8 @@ Red/System [
 ; original program Copyright (c) Camilla Berglund <elmindreda@elmindreda.org>
 ;========================================================================
 
-#include %../glfw.reds
-#include %../Tools/user.reds
+#include %../../glfw.reds
+
 
 width: 640
 height: 480
@@ -168,7 +168,6 @@ error_callback: func [[calling] error [integer!] description [c-string!]] [
     
     glfwDestroyWindow window
     window: null
-
     glfwTerminate
 
 

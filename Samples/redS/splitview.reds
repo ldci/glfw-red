@@ -12,9 +12,9 @@ Red/System [
     ;========================================================================
     
     
-    #include %../glfw.reds
-    #include %../Tools/user.reds
-    #include %../Tools/math.reds
+    #include %../../glfw.reds
+    #include %../../Tools/user.reds
+    #include %../../Tools/math.reds
     
     #define M_PI 3.14159265358979323846
     ;========================================================================

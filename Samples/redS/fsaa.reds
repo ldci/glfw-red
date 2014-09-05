@@ -13,8 +13,8 @@ Red/System [
 ; original program Copyright (c) Camilla Berglund <elmindreda@elmindreda.org>
 ;========================================================================
 
-#include %../glfw.reds
-#include %../Tools/user.reds
+#include %../../glfw.reds
+
 
 time: 0.0
 

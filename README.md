@@ -33,3 +33,7 @@ user.reds by Boleslav Brezovsky (https://github.com/rebolek/user.reds).
 
 ###  Samples dir 
 Includes some samples adapted from orignal codes in C.
+
+### NEW !
+redS includes red/System samples
+red includes  red samples

@@ -8,13 +8,14 @@ Red/System [
     ;Simple GLFW example
     ; Origimal program Copyright (c) Camilla Berglund <elmindreda@elmindreda.org>
 
-    #include %../glfw.reds
-    #include %../Tools/user.reds
-    
+    #include %../../glfw.reds
+   
     ratio: 0.0
+    angle: 0.0
     width: 0
     height: 0
-    angle: 0.0
+    fwidth: 0.0
+    fheight: 0.0
     
     &width: :width; pointer! 
     &height: :height ;pointer!
@@ -45,7 +46,9 @@ Red/System [
     
     while [(glfwWindowShouldClose window) = GL_FALSE] [
         glfwGetFramebufferSize window &width &height
-        ratio:  (int-to-float width) /  (int-to-float height)
+        fwidth: 1.0 * &width/value
+        fheight: 1.0 * &height/value
+        ratio:  fwidth / fheight
         glViewport 0 0 width height
         glClearColor 0.0 0.0 0.0 0.0
         glClear GL_COLOR_BUFFER_BIT
@@ -55,7 +58,7 @@ Red/System [
         glMatrixMode GL_MODELVIEW
         glLoadIdentity
         
-        angle: glfwGetTime * 50.00
+        angle: glfwGetTime * 36.00
         glRotatef as float32! angle 0.0 0.0 1.0
         
         glBegin GL_TRIANGLES

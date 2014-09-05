@@ -13,9 +13,7 @@ Red/System [
 ; original program Copyright (c) Camilla Berglund <elmindreda@elmindreda.org>
 ;========================================================================
 
-#include %../glfw.reds
-#include %../Tools/user.reds
-#include %../Tools/C-library.reds
+#include %../../glfw.reds
 
 ;in gl3.h
 #define GL_CONTEXT_CORE_PROFILE_BIT             00000001h

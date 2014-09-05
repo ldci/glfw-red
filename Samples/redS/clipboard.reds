@@ -11,8 +11,8 @@ Red/System [
 ; original program Copyright (c) Camilla Berglund <elmindreda@elmindreda.org>
 ;========================================================================
 
-#include %../glfw.reds
-#include %../Tools/user.reds
+#include %../../glfw.reds
+
 
 error_callback: func [[calling] error [integer!] description [c-string!]] [
         print [ description " " stderr]

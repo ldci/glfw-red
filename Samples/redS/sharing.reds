@@ -11,9 +11,8 @@ Red/System [
 ;========================================================================
 
 
-#include %../glfw.reds
-#include %../Tools/user.reds
-#include %../Tools/C-library.reds
+#include %../../glfw.reds
+#include %../../Tools/C-library.reds
 
     #define WIDTH  400
     #define HEIGHT 400

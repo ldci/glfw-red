@@ -11,8 +11,8 @@ Red/System [
     ; Orginal program by Camilla Berglund <elmindreda@elmindreda.org>
     ;========================================================================
 
-    #include %../glfw.reds
-    #include %../Tools/user.reds
+    #include %../../glfw.reds
+    #include %../../Tools/user.reds
     
     i: 1
     c1: 0.0
