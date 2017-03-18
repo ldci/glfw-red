@@ -8,7 +8,7 @@ Red/System [
     ; just as simple demo to draw forms
     
     
-    #include %../../glfw.reds
+   #include %../../lib/glfw3.reds
     
     error_callback: func [[calling] error [integer!] description [c-string!]] [
     print [ description " " stderr]
@@ -26,7 +26,7 @@ Red/System [
     
     glfwInit
     
-    window: glfwCreateWindow 800 600 "A Simple OpenGL Quad with Red [ESC to Quit]" NULL NULL
+    window: glfwCreateWindow 800 600 "A Simple OpenGL Quad with Red and GLFW [ESC to Quit]" NULL NULL
     glfwMakeContextCurrent window
     glfwSetErrorCallback :error_callback
     glfwSetKeyCallback window :key_callback

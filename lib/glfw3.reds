@@ -1,36 +1,30 @@
 Red/System [
-	Title:		"GLFW Binding"
-	Author:		"François Jouen"
-	Rights:		"Copyright (c) 2013-2014 François Jouen. All rights reserved."
-	License:        "BSD-3 - https://github.com/dockimbel/Red/blob/master/BSD-3-License.txt"
+	Title:		"GLFW3 Binding"
+	Author:		"F.Jouen"
+	Rights:		"Copyright (c) 2013-2017 Francois Jouen. All rights reserved."
+	License:    "BSD-3 - https://github.com/dockimbel/Red/blob/master/BSD-3-License.txt"
 ]
 
+; cette version fonctionne avec Red-061 et master
 
+#define importMode cdecl 
 
-;GLFW (http://www.glfw.org) is a free, Open Source, portable library for OpenGL and OpenGL ES
-;application development.  It provides a simple, platform-independent API for
-;creating windows and contexts, reading input, handling events, etc.
-
-
-; please update paths according to your OS
+; adapt libraries paths for your own use :)
+; this will be changed in future for relative paths
 #switch OS [
-        MacOSX		[#define glfwlib "/usr/local/lib/libglfw.dylib" #define calling cdecl]  
-        Windows		[#define glfwlib "c:\glfw\bin\glfw.dlll" #define calling stdcall]                               
-        Linux           [#define glfwlib "/usr/lib/libglfw.so" #define calling cdecl]                                        
-	#default	[#define glfwlib "/usr/local/lib/libglfw.dylib" #define calling cdecl]
+    MacOSX  [#define glfw3 "/usr/local/lib32/GLFW/libglfw.dylib"]
+    Windows [#define glfw3 "c:\glfw\bin\glfw.dll"]
+    Linux   [#define glfw3 #define glfw3lib "/usr/lib/libglfw.so"]
 ]
 
 
 #include %rpointers.reds
-;glfwlib requires OpenGL  
-#include %opgl.reds
 #include %glu.reds
 
-; GLFW API tokens
 
 #define GLFW_VERSION_MAJOR          3
-#define GLFW_VERSION_MINOR          0
-#define GLFW_VERSION_REVISION       4
+#define GLFW_VERSION_MINOR          2
+#define GLFW_VERSION_REVISION       1
 #define GLFW_RELEASE                0
 #define GLFW_PRESS                  1
 #define GLFW_REPEAT                 2
@@ -261,15 +255,36 @@ Red/System [
 #define GLFW_CURSOR_HIDDEN          00034002h
 #define GLFW_CURSOR_DISABLED        00034003h
 
+#define GLFW_ANY_RELEASE_BEHAVIOR   0
+#define GLFW_RELEASE_BEHAVIOR_FLUSH 00035001h
+#define GLFW_RELEASE_BEHAVIOR_NONE  00035002h
+
+#define GLFW_NATIVE_CONTEXT_API     00036001h
+#define GLFW_EGL_CONTEXT_API        00036002h
+
+#define GLFW_ARROW_CURSOR           00036001h
+#define GLFW_IBEAM_CURSOR           00036002h
+#define GLFW_CROSSHAIR_CURSOR       00036003h
+#define GLFW_HAND_CURSOR            00036004h
+#define GLFW_HRESIZE_CURSOR         00036005h
+#define GLFW_VRESIZE_CURSOR         00036006h
+
 #define GLFW_CONNECTED              00040001h
 #define GLFW_DISCONNECTED           00040002h
+
+#define GLFW_DONT_CARE              -1
 
 ; GLFW API types
 ;opaques structures
 #define GLFWmonitor int-ptr!
 #define GLFWwindow int-ptr!
+#define GLFWcursor int-ptr!
+#define VkInstance int-ptr!
+#define VkPhysicalDevice int-ptr!
+
 ;red/system aliases to functions / by convention use ! suffix
 GLFWglproc!: alias function! []
+GLFWvkproc!: alias function! []
 GLFWerrorfun!: alias function! [ n[integer!] s [c-string!]]
 GLFWwindowposfun!: alias function! [w [GLFWwindow] n1 [integer!] n2 [integer!]]
 GLFWwindowsizefun!: alias function! [w [GLFWwindow] n1 [integer!] n2 [integer!]]
@@ -284,9 +299,10 @@ GLFWcursorenterfun!: alias function! [w [GLFWwindow] n1 [integer!]]
 GLFWscrollfun!: alias function! [w [GLFWwindow] n1 [float!] n2 [float!]]
 GLFWkeyfun!: alias function! [w [GLFWwindow] n1 [integer!] n2 [integer!] n3 [integer!] n4 [integer!]]
 GLFWcharfun!: alias function! [w [GLFWwindow] b [integer!] ]
+GLFWcharmodsfun!: alias function! [w [GLFWwindow] n1 [integer!] n2 [integer!]]
+GLFWdropfun!: alias function! [w [GLFWwindow] n1 [integer!] s [c-string!]]
 GLFWmonitorfun!: alias function! [w [GLFWwindow] n [integer!] ]
-
-
+GLFWjoystickfun!: alias function! [n1 [integer!] n2 [integer!]]
 
 GLFWvidmode: alias struct! [
     width           [integer!]
@@ -312,20 +328,17 @@ GLFWimage: alias struct! [
     *Data           [int-ptr!]
 ]
 
-
-
 #import [
-    glfwlib calling [
-        glfwInit: "glfwInit" [
+    glfw3 importmode [
+    	glfwInit: "glfwInit" [
         "Initializes the GLFW library. return `GL_TRUE` if successful, or `GL_FALSE` if an error occurred."
             return:	    [integer!]    
         ]
-        
         glfwTerminate: "glfwTerminate" [
         "Terminates the GLFW library."   
+        	return: [integer!]
         ]
-        
-        glfwGetVersion: "glfwGetVersion" [
+         glfwGetVersion: "glfwGetVersion" [
         "Retrieves the version of the GLFW library."
             major           [int-ptr!]
             minor           [int-ptr!]
@@ -335,7 +348,6 @@ GLFWimage: alias struct! [
         "Returns a string describing the compile-time configuration."
             return:	    [c-string!] 
         ]
-        
         glfwSetErrorCallback: "glfwSetErrorCallback" [
         "Sets the error callback."
             cbfun           [GLFWerrorfun!]
@@ -351,7 +363,6 @@ GLFWimage: alias struct! [
         "Returns the primary monitor."
             return:	    [GLFWmonitor]   
         ]
-        
         glfwGetMonitorPos: "glfwGetMonitorPos" [
         "Returns the position of the monitor's viewport on the virtual screen."
             monitor         [GLFWmonitor]
@@ -370,7 +381,6 @@ GLFWimage: alias struct! [
             monitor         [GLFWmonitor]
             return:	    [c-string!]   
         ]
-        
         glfwSetMonitorCallback: "glfwSetMonitorCallback" [
         "Sets the monitor configuration callback."
             cbfun           [GLFWmonitorfun!]
@@ -389,13 +399,11 @@ GLFWimage: alias struct! [
             monitor         [GLFWmonitor]
             return:         [GLFWvidmode]
         ]
-        
         glfwSetGamma: "glfwSetGamma" [
         "Generates a gamma ramp and sets it for the specified monitor."
             monitor         [GLFWmonitor]
             gamma           [Float32!]
         ]
-        
         glfwGetGammaRamp: "glfwGetGammaRamp" [
         "Retrieves the current gamma ramp for the specified monitor."
             monitor         [GLFWmonitor]
@@ -407,17 +415,15 @@ GLFWimage: alias struct! [
             monitor         [GLFWmonitor]
             ramp            [GLFWgammaramp]
         ]
-        
         glfwDefaultWindowHints: "glfwDefaultWindowHints" [
-        "Resets all window hints to their default values."    
+        "Resets all window hints to their default values."  
+        	return: [integer!]  
         ]
-        
         glfwWindowHint: "glfwWindowHint" [
         "Sets the specified window hint to the desired value."
             target          [integer!]
             hint            [integer!]
         ]
-        
         glfwCreateWindow: "glfwCreateWindow" [
         "Creates a window and its associated context."
             width           [integer!]
@@ -427,12 +433,10 @@ GLFWimage: alias struct! [
             share           [GLFWwindow]
             return:         [GLFWwindow]
         ]
-        
         glfwDestroyWindow: "glfwDestroyWindow" [
         "Destroys the specified window and its context."
             window           [GLFWwindow]    
         ]
-        
         glfwWindowShouldClose: "glfwWindowShouldClose" [
         "Checks the close flag of the specified window."
             window           [GLFWwindow]
@@ -444,11 +448,17 @@ GLFWimage: alias struct! [
             window         [GLFWwindow]
             value          [integer!]     
         ]
-        
         glfwSetWindowTitle: "glfwSetWindowTitle" [
         "Sets the title of the specified window."
             window         [GLFWwindow]
             title          [c-string!]
+        ]
+        
+        glfwSetWindowIcon: "glfwSetWindowIcon" [
+        "Sets the icon for the specified window"
+        	window         	[GLFWwindow]
+        	count          	[integer!]
+        	images			[GLFWimage]
         ]
         
         glfwGetWindowPos: "glfwGetWindowPos" [
@@ -479,22 +489,51 @@ GLFWimage: alias struct! [
             height           [integer!]  
         ]
         
+        glfwSetWindowSizeLimits: "glfwSetWindowSizeLimits" [
+        "Sets the size limits of the specified window.."
+         	window           [GLFWwindow]
+            minwidth            [integer!]
+            minheight           [integer!]
+            maxwidth            [integer!]
+            maxheight           [integer!]
+        ]
+         glfwSetWindowAspectRatio: "glfwSetWindowAspectRatio" [
+        "Sets the aspect ratio of the specified window"
+        	window           	[GLFWwindow]
+            numer            	[integer!]
+            denom           	[integer!]
+        ]
         glfwGetFramebufferSize: "glfwGetFramebufferSize" [
         "Retrieves the size of the framebuffer of the specified window."
-            window           [GLFWwindow]
-            width            [int-ptr!]
-            height           [int-ptr!]
+            window           	[GLFWwindow]
+            width            	[int-ptr!]
+            height           	[int-ptr!]  
         ]
+        
+        glfwGetWindowFrameSize: "glfwGetWindowFrameSize" [
+        "Retrieves the size of the frame of the window." 
+        	window           	[GLFWwindow]
+            left            	[int-ptr!]
+            top           		[int-ptr!]  
+            right            	[int-ptr!]
+            bottom           	[int-ptr!]  
+        ]
+        
         
         glfwIconifyWindow: "glfwIconifyWindow" [
         "Iconifies the specified window."
             window           [GLFWwindow]  
         ]
-        
         glfwRestoreWindow: "glfwRestoreWindow" [
         "Restores the specified window."
             window           [GLFWwindow]     
         ]
+        
+        glfwMaximizeWindow: "glfwMaximizeWindow" [
+        "Maximizes the specified window"
+        	window           [GLFWwindow] 
+        ]
+        
         
         glfwShowWindow: "glfwShowWindow" [
         "Makes the specified window visible."
@@ -506,12 +545,26 @@ GLFWimage: alias struct! [
             window           [GLFWwindow]    
         ]
         
+        glfwFocusWindow: "glfwFocusWindow" [
+        "Brings the specified window to front and sets input focus."
+            window           [GLFWwindow] 
+        ]
         glfwGetWindowMonitor: "glfwGetWindowMonitor" [
         "Returns the monitor that the window uses for full screen mode."
             window           [GLFWwindow]
             return:          [GLFWmonitor]
         ]
         
+        glfwSetWindowMonitor: "glfwSetWindowMonitor" [
+        "Sets the mode, monitor, video mode and placement of a window."
+        	window           [GLFWwindow]
+        	monitor          [GLFWmonitor]
+        	xpos             [integer!]
+        	ypos             [integer!]
+        	width            [integer!]
+        	height           [integer!]
+        	refreshRa        [integer!]
+        ]
         glfwGetWindowAttrib: "glfwGetWindowAttrib" [
         "Returns an attribute of the specified window."
             window           [GLFWwindow]
@@ -529,7 +582,6 @@ GLFWimage: alias struct! [
         ;Returns the user pointer of the specified window.
             window           [GLFWwindow]    
         ]
-        
         glfwSetWindowPosCallback: "glfwSetWindowPosCallback" [
         "Sets the position callback for the specified window."
             window          [GLFWwindow]
@@ -566,9 +618,7 @@ GLFWimage: alias struct! [
             return:         [GLFWwindowrefreshfun!]
         ]
         
-       
-        
-        glfwSetWindowIconifyCallback: "glfwSetWindowIconifyCallback" [
+         glfwSetWindowIconifyCallback: "glfwSetWindowIconifyCallback" [
         "Sets the iconify callback for the specified window."
             window          [GLFWwindow]
             cbfun           [GLFWwindowiconifyfun!]
@@ -581,15 +631,23 @@ GLFWimage: alias struct! [
             cbfun           [GLFWframebuffersizefun!]
             return:         [GLFWframebuffersizefun!]
         ]
-        
         glfwPollEvents: "glfwPollEvents" [
-        "Processes all pending events."    
+        "Processes all pending events."  
+        	return: [integer!]  
         ]
-        
         glfwWaitEvents: "glfwWaitEvents" [
-        "Waits until events are pending and processes them."    
+        "Waits until events are pending and processes them."
+        	return: [integer!]    
         ]
-        
+        glfwWaitEventsTimeout: "glfwWaitEventsTimeout" [
+        "Waits with timeout until events are queued and processes them."
+        	timeout		[float!]
+        	return:		[integer!]
+        ]
+        glfwPostEmptyEvent: "glfwPostEmptyEvent" [
+        "Posts an empty event to the event queue."
+        	return: [integer!] 
+        ]
         glfwGetInputMode: "glfwGetInputMode" [
         "Returns the value of an input option for the specified window."
             window           [GLFWwindow]
@@ -603,14 +661,18 @@ GLFWimage: alias struct! [
             mode             [integer!]
             value            [integer!] 
         ]
-        
+        glfwGetKeyName: "glfwGetKeyName" [
+        "Returns the localized name of the specified printable key."
+        	int			[integer!]
+        	scancode	[integer!]
+        	return:		[c-string!]
+        ]
         glfwGetKey: "glfwGetKey" [
         "Returns the last reported state of a keyboard key for the specified window."
             window           [GLFWwindow]
             key              [integer!]
             return:          [integer!] 
         ]
-        
         glfwGetMouseButton: "glfwGetMouseButton" [
         "Returns the last reported state of a mouse button for the specified window."
             window           [GLFWwindow]
@@ -624,7 +686,6 @@ GLFWimage: alias struct! [
             xpos             [float-ptr!] ;double*
             ypos             [float-ptr!] ;double*
         ]
-        
         glfwSetCursorPos: "glfwSetCursorPos" [
         "Sets the position of the cursor, relative to the client area of the window."
             window           [GLFWwindow]
@@ -632,27 +693,64 @@ GLFWimage: alias struct! [
             ypos             [Float32!]  
         ]
         
+         glfwCreateCursor: "glfwCreateCursor" [
+        "Creates a custom cursor."
+        	image		[GLFWimage]
+        	xhot		[integer!]
+        	yhot		[integer!]
+        	return:		[GLFWcursor]
+        ]
+        glfwCreateStandardCursor: "glfwCreateStandardCursor" [
+        "Creates a cursor with a standard shape."
+        	shape		[integer!]
+        	return:		[GLFWcursor]
+        ]
+        glfwDestroyCursor: "glfwDestroyCursor" [
+        "Destroys a cursor."
+        	cursor		[GLFWcursor]
+        ]
+        
+        glfwSetCursor: "glfwSetCursor" [
+        "Sets the cursor for the window." 
+        	window          [GLFWwindow]
+        	cursor			[GLFWcursor]
+        ]
+        glfwSetKeyCallback: "glfwSetKeyCallback" [
+        "Sets the key callback."
+            window          [GLFWwindow]
+            cbfun           [GLFWkeyfun!]
+            return:         [GLFWkeyfun!]
+        ]
+        glfwSetCharCallback: "glfwSetCharCallback" [
+        "Sets the Unicode character callback."
+            window          [GLFWwindow]
+            cbfun           [GLFWcharfun!]
+            return:         [GLFWcharfun!]    
+        ]
+        glfwSetCharModsCallback: "glfwSetCharModsCallback" [
+        "Sets the Unicode character with modifiers callback"
+        	window          [GLFWwindow]
+            cbfun           [GLFWcharfun!]
+            return:         [GLFWcharmodsfun!]  
+        ]
         glfwSetMouseButtonCallback: "glfwSetMouseButtonCallback" [
         "Sets the mouse button callback."
             window          [GLFWwindow]
             cbfun           [GLFWmousebuttonfun!]
             return:         [GLFWmousebuttonfun!]    
         ]
-        
         glfwSetCursorPosCallback: "glfwSetCursorPosCallback" [
         "Sets the position of the cursor, relative to the client area of the window"
             window          [GLFWwindow]
             cbfun           [GLFWcursorposfun!]
             return:         [GLFWcursorposfun!]    
         ]
-        
-        glfwSetCursorEnterCallback: "glfwSetCursorEnterCallback" [
+         glfwSetCursorEnterCallback: "glfwSetCursorEnterCallback" [
         "Sets the key callback."
             window          [GLFWwindow]
             cbfun           [GLFWcursorenterfun!]
             return:         [GLFWcursorenterfun!]  
         ]
-        
         glfwSetScrollCallback: "glfwSetScrollCallback" [
         "Sets the scroll callback."
             window          [GLFWwindow]
@@ -660,20 +758,12 @@ GLFWimage: alias struct! [
             return:         [GLFWscrollfun!]    
         ]
         
-        glfwSetKeyCallback: "glfwSetKeyCallback" [
-        "Sets the key callback."
-            window          [GLFWwindow]
-            cbfun           [GLFWkeyfun!]
-            return:         [GLFWkeyfun!]
+        glfwSetDropCallback: "glfwSetDropCallback" [
+        "Sets the file drop callback." 
+        	window          [GLFWwindow]
+            cbfun           [GLFWdropfun!]
+            return:         [GLFWdropfun!]  
         ]
-        
-        glfwSetCharCallback: "glfwSetCharCallback" [
-        "Sets the Unicode character callback."
-            window          [GLFWwindow]
-            cbfun           [GLFWcharfun!]
-            return:         [GLFWcharfun!]    
-        ]
-        
         glfwJoystickPresent: "glfwJoystickPresent" [
         "Returns whether the specified joystick is present."
             joy             [integer!]
@@ -698,8 +788,12 @@ GLFWimage: alias struct! [
             joy             [integer!]
             return:         [c-string!]   
         ]
-        
-        glfwSetClipboardString: "glfwSetClipboardString" [
+        glfwSetJoystickCallback: "glfwSetJoystickCallback" [
+        "Sets the joystick configuration callback."
+        	cbfun		[GLFWjoystickfun!]
+        	return: 	[GLFWjoystickfun!]
+        ]
+         glfwSetClipboardString: "glfwSetClipboardString" [
         "ets the clipboard to the specified string."
             window           [GLFWwindow]
             string           [c-string!]  ; pointer          
@@ -710,7 +804,6 @@ GLFWimage: alias struct! [
             window           [GLFWwindow]
             return:          [c-string!]        
         ]
-        
         glfwGetTime: "glfwGetTime" [
         "Returns the value of the GLFW timer."
             return:          [Float!]    
@@ -721,6 +814,15 @@ GLFWimage: alias struct! [
             time            [Float!]    
         ]
         
+        glfwGetTimerValue: "glfwGetTimerValue" [
+        " Returns the current value of the raw timer."
+        	return: [integer!]
+        ]
+        
+        glfwGetTimerFrequency: "glfwGetTimerFrequency" [
+        "Returns the frequency, in Hz, of the raw timer."
+        	return: [integer!]
+        ]
         glfwMakeContextCurrent: "glfwMakeContextCurrent" [
         "Makes the context of the specified window current for the calling thread."
              window           [GLFWwindow]    
@@ -735,7 +837,6 @@ GLFWimage: alias struct! [
         "Swaps the front and back buffers of the specified window."
             window           [GLFWwindow]     
         ]
-        
         glfwSwapInterval: "glfwSwapInterval" [
         "Sets the swap interval for the current context.(vsync)"
             interval        [integer!]
@@ -752,58 +853,131 @@ GLFWimage: alias struct! [
             procname       [c-string!]
             return:        [int-ptr!]
         ]
+        glfwVulkanSupported: "glfwVulkanSupported" [
+        "Returns whether the Vulkan loader has been found."
+        	return: [integer!]
+        ]
         
+        glfwGetRequiredInstanceExtensions: "glfwGetRequiredInstanceExtensions" [
+        "Returns the Vulkan instance extensions required by GLFW."
+        	count	[integer!]
+        	return: [c-string!]
+        ]
+        glfwGetInstanceProcAddress: "glfwGetInstanceProcAddress" [
+        "Returns the address of the specified Vulkan instance function."
+        	instance	[VkInstance]
+        	procname	[c-string!]
+        	return:		[GLFWvkproc!]
+        ]
+        glfwGetPhysicalDevicePresentationSupport: "glfwGetPhysicalDevicePresentationSupport" [
+        "Returns whether the specified queue family can present images."
+        	instance	[VkInstance]
+        	device		[VkPhysicalDevice]
+        	queuefamily	[integer!]
+        	return:		[integer!]
+        ]
+        glfwCreateWindowSurface: "glfwCreateWindowSurface" [
+        	instance		[VkInstance]
+        	window          [GLFWwindow]
+        	allocator		[int-ptr!]
+        	surface			[int-ptr!]	
+        	return:			[int-ptr!]	
+        ]
         ;*****************************************************
         ; glfw3native functions ; see glfw3native.h for detail
         ; be sure of what you 're doing
         ;*****************************************************
         
-        
+        glfwGetWin32Adapter: "glfwGetWin32Adapter" [
+        "Returns the adapter device name of the specified monitor."
+        	monitor		[GLFWmonitor]
+        	return:		[c-string!]
+        ]
+        glfwGetWin32Monitor: "glfwGetWin32Monitor" [
+        "Returns the display device name of the specified monitor."
+        	monitor		[GLFWmonitor]
+        	return:		[c-string!]
+        ]
         ;#if defined(GLFW_EXPOSE_NATIVE_WIN32)
         glfwGetWin32Window: "glfwGetWin32Window" [
             window           [GLFWwindow]
             return:          [byte-ptr!] ;HWND
         ]
-        
         ;#if defined(GLFW_EXPOSE_NATIVE_WGL)
         glfwGetWGLContext: "glfwGetWGLContext" [
             window           [GLFWwindow]
             return:          [byte-ptr!] ;HGLRC
         ]
-        
+        ;#if defined(GLFW_EXPOSE_NATIVE_COCOA)
+        glfwGetCocoaMonitor: "glfwGetCocoaMonitor" [
+        	monitor		[GLFWmonitor]
+        	return:		[byte-ptr!] ;CGDirectDisplayID
+        ]
         ;#if defined(GLFW_EXPOSE_NATIVE_COCOA)
         glfwGetCocoaWindow: "glfwGetCocoaWindow" [
             window           [GLFWwindow]
             return:          [byte-ptr!] ;id
         ]
-        
         ;#if defined(GLFW_EXPOSE_NATIVE_NSGL)
         glfwGetNSGLContext: "glfwGetNSGLContext" [
             window           [GLFWwindow]
             return:          [byte-ptr!] ;id
         ]
-        
         ;#if defined(GLFW_EXPOSE_NATIVE_X11)
         glfwGetX11Display: "glfwGetX11Display" [
             return:          [byte-ptr!] ;Display*
         ]
-        
+        glfwGetX11Adapter: "glfwGetX11Adapter" [
+        	monitor			[GLFWmonitor]
+        	return:          [byte-ptr!] 
+        ]
+        glfwGetX11Monitor: "glfwGetX11Monitor" [
+        	monitor			[GLFWmonitor]
+        	return:          [byte-ptr!] 
+        ]
         glfwGetX11Window: "glfwGetX11Window" [
             window           [GLFWwindow]
             return:          [byte-ptr!] ;window
         ]
-        
         ;#if defined(GLFW_EXPOSE_NATIVE_GLX)
         glfwGetGLXContext: "glfwGetGLXContext" [
             window           [GLFWwindow]
             return:          [byte-ptr!] ;GLXContext
+        ]
+        glfwGetGLXWindow: "glfwGetGLXWindow" [
+        	window           [GLFWwindow]
+            return:          [byte-ptr!] ;GLXContext
+        ]
+        
+        ;#if defined(GLFW_EXPOSE_NATIVE_WAYLAND)
+        glfwGetWaylandDisplay: "glfwGetWaylandDisplay" [
+        	return:          [byte-ptr!]
+        ]
+        glfwGetWaylandMonitor: "glfwGetWaylandMonitor" [
+        	monitor			[GLFWmonitor]
+        	return:          [byte-ptr!] 
+        ]
+        glfwGetWaylandWindow: "glfwGetWaylandWindow" [
+        	window           [GLFWwindow]
+            return:          [byte-ptr!] 
+        ]
+        ;#if defined(GLFW_EXPOSE_NATIVE_MIR)
+        glfwGetMirDisplay: "glfwGetMirDisplay" [
+        	return:          [byte-ptr!]
+        ]
+        glfwGetMirMonitor: "glfwGetMirMonitor" [
+        	monitor			[GLFWmonitor]
+        	return:          [byte-ptr!]
+        ]
+        glfwGetMirWindow: "glfwGetMirWindow" [
+        	window           [GLFWwindow]
+            return:          [byte-ptr!] 
         ]
         
         ;#if defined(GLFW_EXPOSE_NATIVE_EGL)
         glfwGetEGLDisplay: "glfwGetEGLDisplay" [
             return:          [byte-ptr!] ;EGLDisplay
         ]
-        
         glfwGetEGLContext: "glfwGetEGLContext" [
             window           [GLFWwindow]
             return:          [byte-ptr!] ;EGLContext
@@ -812,13 +986,6 @@ GLFWimage: alias struct! [
         glfwGetEGLSurface: "glfwGetEGLSurface" [
             window           [GLFWwindow]
             return:          [byte-ptr!] ;EGLSurface
-        ]
+        ]  
     ]
 ]
-
-
-; for tests 
-{print ["Library is : " glfwlib lf]
-glfwInit
-print ["Version: " glfwGetVersionString lf]
-glfwTerminate}

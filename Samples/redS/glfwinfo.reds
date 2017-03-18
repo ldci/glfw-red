@@ -13,7 +13,7 @@ Red/System [
 ; original program Copyright (c) Camilla Berglund <elmindreda@elmindreda.org>
 ;========================================================================
 
-#include %../../glfw.reds
+#include %../../lib/glfw3.reds
 
 ;in gl3.h
 #define GL_CONTEXT_CORE_PROFILE_BIT             00000001h
@@ -40,6 +40,8 @@ Red/System [
 
 #define STRATEGY_NAME_NONE "none"
 #define STRATEGY_NAME_LOSE "lose"
+
+;window: declare pointer! [integer!]
 
 error_callback: func [[calling] error [integer!] description [c-string!]] [
         ;write-form [stderr "Error: %s\n" description]
@@ -79,7 +81,7 @@ get_strategy_name_glfw: func [strategy [integer!] return: [c-string!]] [
     return "unknown"
 ]
 
-list_extensions: func [api [integer!] major [integer!] minor [integer!] /local i c count glGetStringi extensions length ][
+list_extensions: func [api [integer!] major [integer!] minor [integer!] /local i c count glGetStringi extensions length &count ][
     print [get_client_api_name api " context supported extensions: "  newline]
     count: 0 &count: :count
     i: 0
@@ -108,7 +110,7 @@ list_extensions: func [api [integer!] major [integer!] minor [integer!] /local i
     ]  
 ]
 
-valid_version: func [ return: [logic! ]/local major minor revision] [
+valid_version: func [ return: [logic! ]/local major minor &major &minor revision &revision] [
     major: 0 &major: :major
     minor: 0 &minor: :minor
     revision: 0 &revision: :revision
@@ -125,18 +127,35 @@ valid_version: func [ return: [logic! ]/local major minor revision] [
         print ["*** WARNING: GLFW version mismatch! " newline]
     ]
     print ["GLFW library version string: " glfwGetVersionString newline]
-    true
     
+    true
+]
+
+
+initgl: func [return: [integer!]] [
+		if glfwInit = 0 [glfwTerminate]
+		window: glfwCreateWindow 200 200 "Version" NULL NULL
+		glfwMakeContextCurrent window
+		glfwSetErrorCallback :error_callback
+		return 1
 ]
 
 
 ; main 
+	;Initialize GLFW and create window
+	initgl
+	
     ; flag tests
     api: 0 profile: 0 strategy: 0 major: 1 minor: 0 revision: 0
     debug: GL_TRUE forward: GL_TRUE list: GL_TRUE
     ; pointers
-    flags: 0 &flags: :flags  mask: 0 &mask: :mask
-    strategy: 0 &strategy: :strategy
+    flags: 0 
+    mask: 0 
+    strategy: 0 
+    &flags: declare pointer! [integer!]
+    &mask: declare pointer! [integer!]
+    &strategy: declare pointer! [integer!]
+    
     ; we dont use argument list on command-line (ch = getopt(argc, argv, "a:dfhlm:n:p:r:")
     ; please use test flags 
     
@@ -145,10 +164,12 @@ valid_version: func [ return: [logic! ]/local major minor revision] [
     print [newline]
     if (valid_version = false) [glfwTerminate]
     
-    ;Initialize GLFW and create window
-
-    glfwSetErrorCallback :error_callback
-    if glfwInit = 0 [glfwTerminate] ; exit
+    window: glfwCreateWindow 200 200 "Version" NULL NULL
+    glfwMakeContextCurrent window
+    
+    
+    
+    
     
     if (major <> 1) OR (minor <> 0)
     [
@@ -161,26 +182,23 @@ valid_version: func [ return: [logic! ]/local major minor revision] [
     
     ; test: debug true or false 
     if (debug =  GL_TRUE) [glfwWindowHint GLFW_OPENGL_DEBUG_CONTEXT GL_TRUE]
+    
     ; test: debug true or false
     if (forward =  GL_TRUE) [glfwWindowHint GLFW_OPENGL_FORWARD_COMPAT GL_TRUE]
     
     ; test: 0 or !0
     if (profile <> 0) [glfwWindowHint GLFW_OPENGL_PROFILE profile]
-    
-    ; test: 0 or !0
+	
+	; test: 0 or !0
     if (strategy <> 0) [glfwWindowHint GLFW_CONTEXT_ROBUSTNESS strategy]
     
     glfwWindowHint GLFW_VISIBLE GL_FALSE
-    window: glfwCreateWindow 200 200 "Version" NULL NULL
-    glfwMakeContextCurrent window
     
-    ;// Report client API version
-
     api: glfwGetWindowAttrib window GLFW_CLIENT_API
     major: glfwGetWindowAttrib window GLFW_CONTEXT_VERSION_MAJOR
     minor: glfwGetWindowAttrib window GLFW_CONTEXT_VERSION_MINOR
     revision: glfwGetWindowAttrib window GLFW_CONTEXT_REVISION
-
+    
     print[get_client_api_name api " context version string: " as c-string! glGetString GL_VERSION newline ]
     print[get_client_api_name api " context version parsed by GLFW: " major "." minor "." revision newline]
     
@@ -211,16 +229,10 @@ valid_version: func [ return: [logic! ]/local major minor revision] [
             print [get_client_api_name api " robustness strategy parsed by GLFW: " get_strategy_name_glfw robustness newline]
         ]
     ]
+    
     print [get_client_api_name api " context renderer string: " as c-string! glGetString GL_RENDERER newline]
     print [get_client_api_name api " context vendor string: " as c-string! glGetString GL_VENDOR newline]
-        
-    if (major > 1) [
-        print [get_client_api_name api " context shading language version: " as c-string! glGetString GL_SHADING_LANGUAGE_VERSION newline]
-    ]
     
-    ;; Report client API extensions
-    if (list = GL_TRUE) [list_extensions api major minor]
-
     glfwTerminate
         
         

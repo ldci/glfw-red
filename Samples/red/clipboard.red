@@ -13,7 +13,7 @@ Red [
 ; how to use Red/System code inside Red
 
 #system [
-	#include %../../glfw.reds ; this lib also includes opgl.reds	
+	#include %../../lib/glfw3.reds ; this lib also includes opgl.reds	
 	; for error callback code pointer
 	error_callback: func [[calling] error [integer!] description [c-string!]] [
 	print [ description " " stderr]
@@ -50,6 +50,7 @@ Red [
 	framebuffer_size_callback: func [[calling] window [GLFWwindow] width [integer!] height [integer!]] [
 		glViewport 0 0 width height
 	]
+	window: declare pointer! [integer!]
  ]
  
  

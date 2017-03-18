@@ -12,12 +12,12 @@ Red/System [
 ;========================================================================
 
 
-#include %../../glfw.reds
-
+#include %../../lib/glfw3.reds
 
 
 listModes: function [monitor [GLFWmonitor]
-    /local c xpos ypos width height count modes pmodes nmodes p] [
+    /local c xpos ypos width height depth count modes pmodes nmodes p currentMode
+    	dpi gamma] [
     xpos: declare pointer! [integer!]
     ypos: declare pointer! [integer!]
     width: declare pointer! [integer!]

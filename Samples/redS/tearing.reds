@@ -12,10 +12,9 @@ Red/System [
 ; Orginal program by Camilla Berglund <elmindreda@elmindreda.org>
 ;========================================================================
 
-#include %../../glfw.reds
-#include %../../Tools/user.reds
-#include %../../Tools/math.reds
-#include %../../Tools/C-library.reds
+#include %../../lib/glfw3.reds
+#include %../../lib/Tools/math.reds
+#include %../../lib/Tools/C-library.reds
 
 swap_interval: 0
 frame_rate: 0.0

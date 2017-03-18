@@ -8,7 +8,7 @@ Red/System [
     ;Simple GLFW example
     ; Origimal program Copyright (c) Camilla Berglund <elmindreda@elmindreda.org>
 
-    #include %../../glfw.reds
+    #include %../../lib/glfw3.reds
    
     ratio: 0.0
     angle: 0.0
@@ -38,7 +38,7 @@ Red/System [
     
     if glfwInit = 0 [glfwTerminate] ; exit
     
-    window: glfwCreateWindow 640 480 "Animated OpenGL Triangle with Red [ESC to Quit]" NULL NULL
+    window: glfwCreateWindow 640 480 "Animated OpenGL Triangle with Red and GLFW [ESC to Quit]" NULL NULL
     if window = null [glfwTerminate]
     glfwMakeContextCurrent window
     glfwSetErrorCallback :error_callback
@@ -46,9 +46,11 @@ Red/System [
     
     while [(glfwWindowShouldClose window) = GL_FALSE] [
         glfwGetFramebufferSize window &width &height
-        fwidth: 1.0 * &width/value
-        fheight: 1.0 * &height/value
+        
+        fwidth: as float! &width/value
+        fheight: as float! &height/value
         ratio:  fwidth / fheight
+        
         glViewport 0 0 width height
         glClearColor 0.0 0.0 0.0 0.0
         glClear GL_COLOR_BUFFER_BIT
@@ -59,6 +61,7 @@ Red/System [
         glLoadIdentity
         
         angle: glfwGetTime * 36.00
+       
         glRotatef as float32! angle 0.0 0.0 1.0
         
         glBegin GL_TRIANGLES

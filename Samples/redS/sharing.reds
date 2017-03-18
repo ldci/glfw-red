@@ -11,8 +11,8 @@ Red/System [
 ;========================================================================
 
 
-#include %../../glfw.reds
-#include %../../Tools/C-library.reds
+#include %../../lib/glfw3.reds
+#include %../../lib/Tools/C-library.reds
 
     #define WIDTH  400
     #define HEIGHT 400
@@ -67,7 +67,7 @@ Red/System [
     ]
     
     
-    create_texture: func [return: [integer!] /local size pixels ct x y texture ][
+    create_texture: func [return: [integer!] /local size pixels ct x y texture &texture ][
         ;char pixels[256 * 256]
         pixels: allocate (256 * 256)
         texture: 0
@@ -96,7 +96,7 @@ Red/System [
     
    
     
-    draw_quad: func [texture [integer!] /local w h ] [
+    draw_quad: func [texture [integer!] /local w h &w &h] [
         w: 0 h: 0
         &w: :w
         &h: :h

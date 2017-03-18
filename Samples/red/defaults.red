@@ -16,7 +16,7 @@ Red [
 ; how to use Red/System code inside Red
 
 #system [
-    #include %../../glfw.reds ; this lib also includes opgl.reds
+    #include %../../lib/glfw3.reds ; this lib also includes opgl.reds
     
     AttribGL!: alias struct! [
         attrib      [integer!]
@@ -127,10 +127,11 @@ Red [
     error_callback: func [[calling] error [integer!] description [c-string!]] [
         print [ description " " stderr]
     ]
+    window: declare pointer! [integer!]
 ]
 
 
-defaults: routine [] [
+defaults: routine [/local width height &width &height c p value &value] [
 
     width: 640
     height: 480

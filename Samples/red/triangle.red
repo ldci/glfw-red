@@ -11,11 +11,12 @@ Red [
 ; lastly red strings must be converted in c-strings red/System (Thanks to Jocko for as c-string! string/rs-head txt)
 
 #system [
-	#include %../../glfw.reds ; this lib also includes opgl.reds	
+	#include %../../lib/glfw3.reds ; this lib also includes opgl.reds	
 	; for error callback code pointer
 	error_callback: func [[calling] error [integer!] description [c-string!]] [
 	print [ description " " stderr]
 	]
+	window: declare pointer! [integer!]
 ]
 
 
@@ -49,7 +50,7 @@ render: routine [return: [integer!] ] [
 ;Main program
 
 
-initgl "A Simple OpenGL Triangle with Red"
+initgl "A Simple OpenGL Triangle with Red and GLFW"
 rep: 0
 	until [
 		rep: render	

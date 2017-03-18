@@ -13,7 +13,7 @@ Red/System [
 ; original program Copyright (c) Camilla Berglund <elmindreda@elmindreda.org>
 ;========================================================================
 
-#include %../../glfw.reds
+#include %../../lib/glfw3.reds
 
 
 width: 640

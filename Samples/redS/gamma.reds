@@ -14,7 +14,7 @@ Red/System [
 ;========================================================================
 
 
-#include %../../glfw.reds
+#include %../../lib/glfw3.reds
 
 
 
@@ -23,8 +23,9 @@ width: 200
 height: 200
 &width: :width; pointer! 
 &height: :height ;pointer!
+gamma_value: 0.0
 
-set_gamma: func [window [GLFWwindow] value [float!] /local monitor] [
+set_gamma: func [window [GLFWwindow] value [float!] /local monitor ] [
     monitor: glfwGetWindowMonitor window
     if (monitor = null) [monitor: glfwGetPrimaryMonitor]
     gamma_value: value

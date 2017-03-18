@@ -11,8 +11,7 @@ Red/System [
     ; Orginal program by Camilla Berglund <elmindreda@elmindreda.org>
     ;========================================================================
 
-    #include %../../glfw.reds
-    #include %../../Tools/user.reds
+    #include %../../lib/glfw3.reds
     
     i: 1
     c1: 0.0
@@ -69,8 +68,8 @@ Red/System [
         pwindows/i: as integer! glfwCreateWindow 200 200 as c-string! ptitles/i NULL NULL
         window: as int-ptr! pwindows/i
         glfwMakeContextCurrent window
-        c1: int-to-float ((i - 1)  and 1)
-        c2: int-to-float ((i - 1) >> 1)
+        c1: as float! ((i - 1)  and 1)
+        c2: as float! ((i - 1) >> 1)
         either i - 1 = 0 [c3: 1.0 ] [c3: 0.0]
         glClearColor as float32! c1 as float32! c2  as float32! c3 1.0
         glfwSetWindowPos window 100 + ((i - 1 AND 1) * 300) 100 + ((i - 1 >> 1) * 300)

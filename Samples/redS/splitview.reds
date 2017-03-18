@@ -12,9 +12,8 @@ Red/System [
     ;========================================================================
     
     
-    #include %../../glfw.reds
-    #include %../../Tools/user.reds
-    #include %../../Tools/math.reds
+    #include %../../lib/glfw3.reds
+    #include %../../lib/Tools/math.reds
     
     #define M_PI 3.14159265358979323846
     ;========================================================================
@@ -53,6 +52,51 @@ Red/System [
     a4: 0.0
     
     
+	model_shininess: as float32! 20.0
+    ; specific to Red use structure to create array
+    model_diffuse: declare struct! [
+            f1  [float32!]
+            f2  [float32!]
+            f3  [float32!]
+            f4  [float32!]
+    ]
+    
+    model_specular: declare struct! [
+            f1  [float32!]
+            f2  [float32!]
+            f3  [float32!]
+            f4  [float32!]
+    ]
+    
+
+    light_position: declare struct! [
+            f1  [float32!]
+            f2  [float32!]
+            f3  [float32!]
+            f4  [float32!]
+    ]
+    
+    light_diffuse: declare struct! [
+            f1  [float32!]
+            f2  [float32!]
+            f3  [float32!]
+            f4  [float32!]
+    ]
+    
+    light_specular: declare struct! [
+            f1  [float32!]
+            f2  [float32!]
+            f3  [float32!]
+            f4  [float32!]
+    ]
+    
+    light_ambient: declare struct! [
+            f1  [float32!]
+            f2  [float32!]
+            f3  [float32!]
+            f4  [float32!]
+    ]
+    
     ;========================================================================
     ; Draw a solid torus (use a display list for the model)     
     ;========================================================================
@@ -60,7 +104,10 @@ Red/System [
     #define TORUS_MINOR     0.5 ; r
     #define TORUS_MAJOR_RES 32
     #define TORUS_MINOR_RES 32 
+    #define fTORUS_MAJOR_RES 32.0
+    #define fTORUS_MINOR_RES 32.0 
     
+   
     drawTorus: func [ /local torus_list i j k s t x y z nx ny nz scale twopi] [
         s: 0.0 t: 0.0 x: 0.0 y: 0.0
         nx: 0.0 ny: 0.0 nz: 0.0
@@ -78,15 +125,15 @@ Red/System [
                 while [j <= TORUS_MAJOR_RES] [
                     k: 1
                     until [
-                        s: int-to-float (i + k) % TORUS_MINOR_RES + 0.5
-                        t: int-to-float j % TORUS_MAJOR_RES
+                        s: as float! (i + k) % TORUS_MINOR_RES + 0.5
+                        t: as float! j % TORUS_MAJOR_RES
                        
                         ;Calculate point on surface
-    
-                        a1: cosine-radians s * twopi / int-to-float TORUS_MINOR_RES
-                        a2: cosine-radians t * twopi / int-to-float TORUS_MAJOR_RES
-                        a3: sine-radians s * twopi / int-to-float TORUS_MINOR_RES
-                        a4: sine-radians t * twopi / int-to-float TORUS_MAJOR_RES
+    					
+                        a1: cosine-radians s * twopi / fTORUS_MINOR_RES
+                        a2: cosine-radians t * twopi / fTORUS_MAJOR_RES
+                        a3: sine-radians s * twopi / fTORUS_MINOR_RES
+                        a4: sine-radians t * twopi / fTORUS_MAJOR_RES
                         
                         ;The general equations for such a torus are
                         ;f(u, v) = [ (R + r*cos(v))*cos(u), (R + r*cos(v))*sin(u),r*sin(v) ]
@@ -122,39 +169,26 @@ Red/System [
     ]
     
     drawScene: func [] [
-        ; specific to Red use structure to create array
-         model_diffuse: declare struct! [
-            f1  [float32!]
-            f2  [float32!]
-            f3  [float32!]
-            f4  [float32!]
-        ]
-        
         model_diffuse/f1: as float32! 1.0
         model_diffuse/f2: as float32! 0.8
         model_diffuse/f3: as float32! 0.8
         model_diffuse/f4: as float32! 1.0
         
-        model_specular: declare struct! [
-            f1  [float32!]
-            f2  [float32!]
-            f3  [float32!]
-            f4  [float32!]
-        ]
+        
         
         model_specular/f1: as float32! 0.6
         model_specular/f2: as float32! 0.6
         model_specular/f3: as float32! 0.6
         model_specular/f4: as float32! 1.0
         
-        model_shininess: as float32! 20.0
+       
 
         glPushMatrix
         
         ;Rotate the object
-        glRotated 0.5 * int-to-float rot_x 1.0 0.0 0.0
-        glRotated 0.5 * int-to-float rot_y 0.0 1.0 0.0
-        glRotated 0.5 * int-to-float rot_z 0.0 0.0 1.0
+        glRotated 0.5 * as float! rot_x 1.0 0.0 0.0
+        glRotated 0.5 * as float! rot_y 0.0 1.0 0.0
+        glRotated 0.5 * as float! rot_z 0.0 0.0 1.0
         
         ;Set model color (used for orthogonal views, lighting disabled)
         glColor4fv as float32-ptr! model_diffuse
@@ -170,7 +204,7 @@ Red/System [
         
     ]
     
-    drawGrid: func [scale [float!] steps [integer!] /local f s i x y][
+    drawGrid: func [scale [float!] steps [integer!] /local f s i x y -y -x][
         glPushMatrix
         ;Set background to some dark bluish grey
         glClearColor 0.05 0.05 0.2 0.0
@@ -186,7 +220,7 @@ Red/System [
         
         
         f: scale * 0.5
-        s: int-to-float (steps - 1)
+        s: as float! (steps - 1)
         
         glBegin GL_LINES
             ;Horizontal lines
@@ -224,50 +258,26 @@ Red/System [
     ]
     
     ;Draw all views
-    drawAllViews: func [] [
-        ;specific to Red use structure to create array
-        light_position: declare struct! [
-            f1  [float32!]
-            f2  [float32!]
-            f3  [float32!]
-            f4  [float32!]
-        ]
+    drawAllViews: func [/local aspect] [
         
         light_position/f1: as float32! 0.0
         light_position/f2: as float32! 8.0
         light_position/f3: as float32! 8.0
         light_position/f4: as float32! 1.0
         
-        light_diffuse: declare struct! [
-            f1  [float32!]
-            f2  [float32!]
-            f3  [float32!]
-            f4  [float32!]
-        ]
-        
         light_diffuse/f1: as float32! 1.0
         light_diffuse/f2: as float32! 1.0
         light_diffuse/f3: as float32! 1.0
         light_diffuse/f4: as float32! 1.0
         
-        light_specular: declare struct! [
-            f1  [float32!]
-            f2  [float32!]
-            f3  [float32!]
-            f4  [float32!]
-        ]
+        
         
         light_specular/f1: as float32! 1.0
         light_specular/f2: as float32! 1.0
         light_specular/f3: as float32! 1.0
         light_specular/f4: as float32! 1.0
         
-        light_ambient: declare struct! [
-            f1  [float32!]
-            f2  [float32!]
-            f3  [float32!]
-            f4  [float32!]
-        ]
+        
         light_ambient/f1: as float32! 0.2
         light_ambient/f2: as float32! 0.2
         light_ambient/f3: as float32! 0.3
@@ -275,7 +285,7 @@ Red/System [
         
         ;Calculate aspect of window
         aspect: 1.0
-        either (height > 0) [aspect: int-to-float width / height] [aspect: 1.0]
+        either (height > 0) [aspect: as float! width / height] [aspect: 1.0]
         
         ;Clear screen
         glClearColor 0.0 0.0 0.0 0.0
@@ -431,8 +441,8 @@ Red/System [
         [calling]
         window [GLFWwindow] x [float!] y [float!]] [
         ;Depending on which view was selected, rotate around different axes
-        xp: float-to-int (x - xpos)
-        yp: float-to-int (y - ypos)
+        xp: as integer! (x - xpos)
+        yp: as integer! (y - ypos)
         switch active_view [
             1 [rot_x: rot_x + yp rot_z: rot_z + xp]
             3 [rot_x: rot_x + yp rot_y: rot_z + xp]
@@ -450,8 +460,8 @@ Red/System [
         window [GLFWwindow] button [integer!] action [integer!] mods [integer!] /local x y] [
         either button = (GLFW_MOUSE_BUTTON_LEFT) AND (action = GLFW_PRESS) [
             active_view: 1
-            x: int-to-float width / 2
-            y: int-to-float height / 2
+            x: as float! width / 2
+            y: as float! height / 2
             if xpos >= x [active_view: active_view  + 1]
             if ypos >= y [active_view: active_view  + 2]
             

@@ -18,15 +18,15 @@ Red/System [
 ; original program Copyright (c) Camilla Berglund <elmindreda@elmindreda.org>
 ;========================================================================
 
-#include %../../glfw.reds
-
+#include %../../lib/glfw3.reds
 
 ;These must match the input mode defaults
 closeable: GL_TRUE
 
 ;Event index
 counter: 0
-
+str: ""
+name: ""
 
 width: 640
 height: 480
@@ -194,7 +194,7 @@ get_mods_name: func [mods [integer!] return: [c-string!] /local name [c-string!]
 
 
 ; ////revoir
-get_character_string: func [character [integer!] return: [c-string!]][
+get_character_string: func [character [integer!] return: [c-string!] /local result length][
     ;// This assumes UTF-8, which is stupid
     result: ""
     length: 0
