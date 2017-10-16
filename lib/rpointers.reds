@@ -10,8 +10,9 @@ Red/System [
 
 ;int-ptr! is defined by red                                 ; equivalent to C's byte *
 ;byte-ptr is defined by                                     ; equivalent to C's int *
-#define float32-ptr!        [pointer! [float32!]]           ; equivalent to C's float *
-#define float-ptr!          [pointer! [Float!]]             ; equivalent to C's double *
+;#define float32-ptr!        [pointer! [float32!]]           ; equivalent to C's float *
+; for 0.6.1
+;#define float-ptr!          [pointer! [Float!]]             ; equivalent to C's double *
 
 ;** pointers
 #define double-byte-ptr!    [struct! [ptr [byte-ptr!]]]     ; equivalent to C's byte **

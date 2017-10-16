@@ -33,7 +33,7 @@ Red/System [
 
 #switch OS [
 	Windows		[#define math-library LIBC-file]
-	MacOSX		[#define math-library "libm.dylib"]  ; TODO: check this
+	macOS		[#define math-library "libm.dylib"]  ; TODO: check this
 	Linux		[#define math-library "libm.so.6"]
 	#default	[#define math-library "libm.so.2"]  ; GNU, Syllable
 ]
@@ -86,7 +86,7 @@ Red/System [
 		value		[float!]
 		return:		[float!]
 	]
-	log-10: "log10" [  ; Base 10 logarithm
+	_log-10: "log10" [  ; Base 10 logarithm
 		value		[float!]
 		return:		[float!]
 	]

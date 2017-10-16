@@ -12,7 +12,7 @@ Red/System [
 ; adapt libraries paths for your own use :)
 ; this will be changed in future for relative paths
 #switch OS [
-    MacOSX  [#define glfw3 "/usr/local/lib32/GLFW/libglfw.dylib"]
+    macOS   [#define glfw3 "/usr/local/lib32/GLFW/libglfw.dylib"]
     Windows [#define glfw3 "c:\glfw\bin\glfw.dll"]
     Linux   [#define glfw3 #define glfw3lib "/usr/lib/libglfw.so"]
 ]

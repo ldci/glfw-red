@@ -1,10 +1,15 @@
 # GLFW Binding for Red Language 
 ## http://www.red-lang.org/ http://www.glfw.org/
 
-This binding has been extensively tested with Mac OSX 10.12.3 and works fine under OSX. 
+This binding has been extensively tested with macOS Sierra and High Sierra and works fine under macOS. 
 Please adapt path to libraries according your main OS.
-This version can be used with the last glfw version 3.1.0 and later 
-This version requires latest Red master branch version
+This version can be used with the last glfw 3.2.0 library.
+ 
+This version requires red 0.6.3.
+
+Have also a look here ([https://github.com/red/code/tree/master/Library/GLFW]()) for a similar lib developped by talented red user.
+
+
 
 ## NEW VERSION 
 

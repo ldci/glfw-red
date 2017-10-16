@@ -8,12 +8,10 @@ Red/System [
 
 ; please update paths according to your OS
 #switch OS [
-        MacOSX		[#define glulib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib"
-                        #define calling cdecl]  
-        Windows		[#define glulib "glu32.dll" #define calling stdcall]                               
-        Linux           [#define glulib "/usr/lib/libGLU.so.1" #define calling cdecl]                                        
-	#default	[#define glulib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib"
-                        #define calling cdecl]
+        macOS		[#define glulib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib"]  
+        Windows		[#define glulib "glu32.dll"]                               
+        Linux           [#define glulib "/usr/lib/libGLU.so.1"]                                        
+	#default	[#define glulib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib"]
 ]
 
 

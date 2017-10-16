@@ -8,7 +8,7 @@ Red/System [
 
 ; please update paths accoeding to your OS
 #switch OS [
-        MacOSX		[#define gllib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"
+        macOS		[#define gllib "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"
                         #define calling cdecl]  
         Windows		[#define gllib "opengl32.dll" #define calling stdcall]                               
         Linux           [#define gllib "/usr/lib/libGL.so.1" #define calling cdecl]                                        
