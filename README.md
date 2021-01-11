@@ -1,7 +1,8 @@
 # GLFW Binding for Red Language 
-## [http://www.glfw.org/]()
+## [http://www.glfw.org/](http://www.glfw.org/)
 
-## [http://www.red-lang.org/]()
+## [http://www.red-lang.org](http://www.red-lang.org) 
+
  
 This binding has been extensively tested with macOS Sierra, High Sierra, Mojave, and works fine under macOS. 
 Please adapt path to libraries according your main OS.
