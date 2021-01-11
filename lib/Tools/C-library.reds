@@ -48,7 +48,7 @@ Red/System [
 #define unsigned16!				integer!
 
 #define variant!				integer!
-handle!:					alias struct! [dummy [variant!]]
+handle!:						alias struct! [dummy [variant!]]
 #define as-handle				[as handle! ]
 #define binary!					[pointer! [byte!]]
 #define as-binary				[as binary! ]
@@ -70,7 +70,7 @@ string-reference!:				alias struct! [value [c-string!]]
 
 #define unsigned!				integer!
 #define long!					integer!
-#define unsigned-long!			        integer!
+#define unsigned-long!			integer!
 #define enum!					integer!
 #define double!					float!
 

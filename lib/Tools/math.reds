@@ -43,8 +43,8 @@ Red/System [
 		integral	[handle!]  ; float-reference!
 		return:		[float!]
 	]
-        ;fj
-        round-trunc: "trunc" [  ; Smallest integer not less
+    ;--added by fj
+    round-trunc: "trunc" [  ; Smallest integer not less
 		value		[float!]
 		return:		[float!]
 	]
@@ -82,7 +82,8 @@ Red/System [
 		power		[float!]
 		return:		[float!]
 	]
-	log-e: "log" [  ; Natural logarithm
+	;--supported by red 
+	_log-e: "log" [  ; Natural logarithm
 		value		[float!]
 		return:		[float!]
 	]
@@ -90,6 +91,7 @@ Red/System [
 		value		[float!]
 		return:		[float!]
 	]
+	;-end
 
 	sine-radians: "sin" [
 		value		[float!]

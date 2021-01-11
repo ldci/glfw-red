@@ -102,13 +102,14 @@ Red/System [
     ;========================================================================
     #define TORUS_MAJOR     1.5 ; R
     #define TORUS_MINOR     0.5 ; r
-    #define TORUS_MAJOR_RES 32
-    #define TORUS_MINOR_RES 32 
+    #define TORUS_MAJOR_RES 32.0
+    #define TORUS_MINOR_RES 32.0
     #define fTORUS_MAJOR_RES 32.0
     #define fTORUS_MINOR_RES 32.0 
     
    
-    drawTorus: func [ /local torus_list i j k s t x y z nx ny nz scale twopi] [
+    drawTorus: func [ /local torus_list i j k s t x y z nx ny nz scale twopi
+    left right ] [
         s: 0.0 t: 0.0 x: 0.0 y: 0.0
         nx: 0.0 ny: 0.0 nz: 0.0
         torus_list: 0
@@ -119,15 +120,18 @@ Red/System [
             ;// Draw torus
             twopi: 2.0 * M_PI
             i: 0
-            while [i <= TORUS_MINOR_RES] [
+            while [(as float! i) <= TORUS_MINOR_RES] [
                 j: 0
                 glBegin GL_QUAD_STRIP
-                while [j <= TORUS_MAJOR_RES] [
+                while [(as float! j) <= TORUS_MAJOR_RES] [
                     k: 1
                     until [
-                        s: as float! (i + k) % TORUS_MINOR_RES + 0.5
-                        t: as float! j % TORUS_MAJOR_RES
-                       
+                    	left: as float! (i + k)
+                    	right: TORUS_MINOR_RES
+                    	s: fmod left right + 0.5
+                    	left: as float! j
+                    	right: TORUS_MAJOR_RES
+                    	t: fmod left right
                         ;Calculate point on surface
     					
                         a1: cosine-radians s * twopi / fTORUS_MINOR_RES
@@ -152,13 +156,13 @@ Red/System [
                         nz:  nz * scale
                         glNormal3d nx ny nz
                         glVertex3d x  y  z
-                        k: k - 1
+                        k: k - 1	
                     k < 0    
                     ]
                     j: j + 1
                 ]
                 glEnd
-                i: i + 1   
+                i: i + 1	   
             ]
             ;Stop recording displaylist
             glEndList
